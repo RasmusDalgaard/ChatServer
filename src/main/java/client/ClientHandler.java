@@ -47,11 +47,13 @@ public class ClientHandler extends Thread {
         String command = bufferedReader.readLine();
         String[] commandArray = command.split("#");
         String token = commandArray[0];
+        String message = clientName + "," + commandArray[1] + "#" + commandArray[2];
         //TODO: join rest of array to string
         while (true) {
             switch (token) {
                 //case "CONNECT": Method; break;
-                case "SEND": handleSend(clientName + "," + commandArray[1] + "#" + commandArray[2]);
+                //TODO: SEND#Peter,Hans#Hello Peter and Hans
+                case "SEND": handleSend(message);
                 case "commando3": //Method; break;
                 case "commando4": //Method; break;
                 case "commando5" : //Method; break;
@@ -60,7 +62,7 @@ public class ClientHandler extends Thread {
     }
 
     public void handleSend(String message) {
-        // TODO: SEND#Peter#Hello Peter    SEND#Peter,Hans#Hello Peter and Hans      SEND#*#Hello everybody
+        //TODO: SEND#Peter,Hans#Hello Peter and Hans
         String inputToDispatcher = message;
         allMessages.add(inputToDispatcher);
 

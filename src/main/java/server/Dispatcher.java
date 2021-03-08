@@ -35,7 +35,7 @@ public class Dispatcher extends Thread {
 
     public void sendMessage(String message) throws IOException {
         //TODO: MESSAGE#Kurt#Hello Peter
-        String clientName = "Peter";
+        String clientName = message.split()
         if (activeClients.containsKey(clientName)) {
             new PrintWriter(activeClients.get(clientName).getOutputStream()).println("Hej peter");
         }
