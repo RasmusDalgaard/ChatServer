@@ -11,13 +11,18 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class ChatServer {
 
-    ConcurrentMap<String, Socket> activeClients = new ConcurrentHashMap<>();
+    BlockingQueue<String> allMessages = new ArrayBlockingQueue<>(200);
+    ConcurrentMap<String, Socket> nameWithClient = new ConcurrentHashMap<>();
 
     //Call server with arguments like this: 0.0.0.0 8088 logfile.log
     public static void main(String[] args) throws UnknownHostException {
@@ -44,7 +49,7 @@ public class ChatServer {
     }
 
     public void runServer(int port) throws IOException {
-        Dispatcher dispatcher = new Dispatcher(activeClients);
+        Dispatcher dispatcher = new Dispatcher(nameWithClient, allMessages);
         dispatcher.start();
         int counter = 0;
         int limit = 3;
@@ -54,12 +59,14 @@ public class ChatServer {
             System.out.println("Waiting for client");
             Socket client = serverSocket.accept();
 
-            PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true);
-            //BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-            dispatcher.addClientToMap(client.getInetAddress().getHostAddress(), client);
+            // TODO: CONNECT#Clientname
+            String name = bufferedReader.readLine();
+            String[] nameArray = name.split("#");
+            nameWithClient.put(nameArray[1], client);
 
-            ClientHandler clientHandler = new ClientHandler(client, activeClients,dispatcher);
+            ClientHandler clientHandler = new ClientHandler(client, nameArray[1], allMessages);
             clientHandler.start();
 
 
