@@ -22,21 +22,17 @@ import java.util.concurrent.ConcurrentMap;
 public class ChatServer {
 
     BlockingQueue<String> allMessages = new ArrayBlockingQueue<>(200);
-    ConcurrentMap<String, Socket> nameWithClient = new ConcurrentHashMap<>();
+    ConcurrentMap<String, Socket> clientNames = new ConcurrentHashMap<>();
 
     //Call server with arguments like this: 0.0.0.0 8088 logfile.log
     public static void main(String[] args) throws UnknownHostException {
-        String ip ="localhost";
-        String logFile = "log.txt";  //Do we need this
+        String ip = "localhost";
         int port = 8088;
-
         try {
-            if (args.length == 3) {
+            if (args.length == 2) {
                 ip = args[0];
                 port = Integer.parseInt(args[1]);
-                logFile = args[2];
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException("Server not provided with the right arguments");
             }
             ChatServer chatServer = new ChatServer();
@@ -49,7 +45,7 @@ public class ChatServer {
     }
 
     public void runServer(int port) throws IOException {
-        Dispatcher dispatcher = new Dispatcher(nameWithClient, allMessages);
+        Dispatcher dispatcher = new Dispatcher(clientNames, allMessages);
         dispatcher.start();
         int counter = 0;
         int limit = 3;
@@ -64,7 +60,7 @@ public class ChatServer {
             // TODO: CONNECT#Clientname
             String name = bufferedReader.readLine();
             String[] nameArray = name.split("#");
-            nameWithClient.put(nameArray[1], client);
+            clientNames.put(nameArray[1], client);
 
             ClientHandler clientHandler = new ClientHandler(client, nameArray[1], allMessages);
             clientHandler.start();

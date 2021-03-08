@@ -1,6 +1,5 @@
 package client;
 
-import com.sun.security.ntlm.Client;
 import server.Dispatcher;
 
 import java.io.BufferedReader;
@@ -19,8 +18,6 @@ public class ClientHandler extends Thread {
     String clientName;
 
     BlockingQueue<String> allMessages;
-
-    ConcurrentMap<String, Socket> activeclients;
 
     public ClientHandler(Socket client, String clientName, BlockingQueue<String> allMessages) {
         this.client = client;
@@ -48,11 +45,10 @@ public class ClientHandler extends Thread {
         String[] commandArray = command.split("#");
         String token = commandArray[0];
         String message = clientName + "," + commandArray[1] + "#" + commandArray[2];
-        //TODO: join rest of array to string
+
         while (true) {
             switch (token) {
                 //case "CONNECT": Method; break;
-                //TODO: SEND#Peter,Hans#Hello Peter and Hans
                 case "SEND": handleSend(message);
                 case "commando3": //Method; break;
                 case "commando4": //Method; break;
@@ -62,7 +58,6 @@ public class ClientHandler extends Thread {
     }
 
     public void handleSend(String message) {
-        //TODO: SEND#Peter,Hans#Hello Peter and Hans
         String inputToDispatcher = message;
         allMessages.add(inputToDispatcher);
 

@@ -26,7 +26,6 @@ public class Dispatcher extends Thread {
             try {
                 String message = allMessages.take();
                 sendMessage(message);
-                // TODO: SEND#Kurt,Peter#Hello Peter
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
@@ -35,9 +34,16 @@ public class Dispatcher extends Thread {
 
     public void sendMessage(String message) throws IOException {
         //TODO: MESSAGE#Kurt#Hello Peter
-        String clientName = message.split()
+        String[] messageArray = message.split(",");
+        String clientName = messageArray[0];
+
+        String[] messageArray2 = message.split("#");
+        String clientMessage = messageArray2[1];
+
+        message = "MESSAGE#" + clientName + "#" + clientMessage;
+
         if (activeClients.containsKey(clientName)) {
-            new PrintWriter(activeClients.get(clientName).getOutputStream()).println("Hej peter");
+            new PrintWriter(activeClients.get(clientName).getOutputStream()).println(message);
         }
     }
 
