@@ -26,17 +26,13 @@ public class ChatServer {
 
     //Call server with arguments like this: 0.0.0.0 8088 logfile.log
     public static void main(String[] args) throws UnknownHostException {
-        String ip = "localhost";
         int port = 8088;
-
-
-        ChatServer chatServer = new ChatServer();
-        try {
-            chatServer.runServer(port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+            try {
+                ChatServer chatServer = new ChatServer();
+                chatServer.runServer(port);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 
     public void runServer(int port) throws IOException {
@@ -49,7 +45,6 @@ public class ChatServer {
             counter++;
             System.out.println("Waiting for client");
             Socket client = serverSocket.accept();
-            System.out.println("New client connected");
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
