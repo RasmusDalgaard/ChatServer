@@ -41,10 +41,11 @@ public class ClientHandler extends Thread {
     }
 
     public void protocol() throws IOException {
+        //TODO: SEND#Hans#Hello Hans (Peter implicit afsender)     SEND#Peter,Hans#Hello hans       //TODO: MESSAGE#Peter#Hello Hans
         String command = bufferedReader.readLine();
         String[] commandArray = command.split("#");
         String token = commandArray[0];
-        String message = clientName + "," + commandArray[1] + "#" + commandArray[2];
+        String message = token + "#" + commandArray[1] + "#" + commandArray[2];
 
         while (true) {
             switch (token) {

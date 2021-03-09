@@ -38,7 +38,7 @@ public class Dispatcher extends Thread {
         String clientName = messageArray[0];
 
         String[] messageArray2 = message.split("#");
-        String clientMessage = messageArray2[1];
+        String clientMessage = messageArray2[2];
 
         message = "MESSAGE#" + clientName + "#" + clientMessage;
 
