@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
 public class ChatServer {
 
     BlockingQueue<String> allMessages = new ArrayBlockingQueue<>(200);
-    ConcurrentMap<String, Socket> clientNames = new ConcurrentHashMap<>();
+    ConcurrentMap<String, Socket> activeClients = new ConcurrentHashMap<>();
 
     //Call server with arguments like this: 0.0.0.0 8088 logfile.log
     public static void main(String[] args) throws UnknownHostException {
@@ -36,7 +36,7 @@ public class ChatServer {
     }
 
     public void runServer(int port) throws IOException {
-        Dispatcher dispatcher = new Dispatcher(clientNames, allMessages);
+        Dispatcher dispatcher = new Dispatcher(activeClients, allMessages);
         dispatcher.start();
         int counter = 0;
         int limit = 3;
@@ -51,7 +51,7 @@ public class ChatServer {
             // TODO: CONNECT#Clientname
             String name = bufferedReader.readLine();
             String[] nameArray = name.split("#");
-            clientNames.put(nameArray[1], client);
+            activeClients.put(nameArray[1], client);
 
             ClientHandler clientHandler = new ClientHandler(client, nameArray[1], allMessages);
             clientHandler.start();
