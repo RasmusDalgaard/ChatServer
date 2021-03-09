@@ -41,24 +41,26 @@ public class ClientHandler extends Thread {
     }
 
     public void protocol() throws IOException {
-        //TODO: SEND#Hans#Hello Hans (Peter implicit afsender)     SEND#Peter,Hans#Hello hans       //TODO: MESSAGE#Peter#Hello Hans
+        //  TODO:  SEND#Hans#Hello hans
         String command = bufferedReader.readLine();
         String[] commandArray = command.split("#");
         String token = commandArray[0];
-        String message = token + "#" + commandArray[1] + "#" + commandArray[2];
-
-        while (true) {
-            switch (token) {
-                //case "CONNECT": Method; break;
-                case "SEND": handleSend(message);
-                case "commando3": //Method; break;
-                case "commando4": //Method; break;
-                case "commando5" : //Method; break;
+        //  TODO:  SEND#Peter,Hans#Hello hans
+        String message = token + "#" + clientName + "," + commandArray[1] + "#" + commandArray[2];
+            while (true) {
+                switch (token) {
+                    //case "CONNECT": Method; break;
+                    case "SEND":
+                        handleSend(message);
+                    case "commando3": //Method; break;
+                    case "commando4": //Method; break;
+                    case "commando5": //Method; break;
+                }
             }
-        }
     }
 
     public void handleSend(String message) {
+        //TODO: SEND#Peter,Hans#Hello hans
         String inputToDispatcher = message;
         allMessages.add(inputToDispatcher);
 

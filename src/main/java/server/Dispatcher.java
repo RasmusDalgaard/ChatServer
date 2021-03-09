@@ -33,17 +33,18 @@ public class Dispatcher extends Thread {
     }
 
     public void sendMessage(String message) throws IOException {
-        //TODO: MESSAGE#Kurt#Hello Peter
-        String[] messageArray = message.split(",");
-        String clientName = messageArray[0];
+        //TODO: MESSAGE#Peter#Hello Hans
+        String[] messageArray = message.split("#");
+        String senderMessage = messageArray[2];
 
-        String[] messageArray2 = message.split("#");
-        String clientMessage = messageArray2[2];
+        String[] senderReciever = messageArray[1].split(",");
+        String senderName = senderReciever[0];
+        String recieverName = senderReciever[1];
 
-        message = "MESSAGE#" + clientName + "#" + clientMessage;
+        String messageToSend = "MESSAGE#" + senderName + "#" + senderMessage;
 
-        if (activeClients.containsKey(clientName)) {
-            new PrintWriter(activeClients.get(clientName).getOutputStream()).println(message);
+        if (activeClients.containsKey(recieverName)) {
+            new PrintWriter(activeClients.get(recieverName).getOutputStream()).println(messageToSend);
         }
     }
 
