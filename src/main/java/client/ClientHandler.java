@@ -31,6 +31,13 @@ public class ClientHandler extends Thread {
         }
     }
 
+    public ClientHandler(String name, BufferedReader br, PrintWriter pw, BlockingQueue<String> allMessages) {
+        this.clientName = name;
+        this.bufferedReader = br;
+        this.printWriter = pw;
+        this.allMessages = allMessages;
+    }
+
     @Override
     public void run() {
         try {
@@ -47,16 +54,14 @@ public class ClientHandler extends Thread {
         String token = commandArray[0];
         //  TODO:  SEND#Peter,Hans#Hello hans
         String message = token + "#" + clientName + "," + commandArray[1] + "#" + commandArray[2];
-            while (true) {
-                switch (token) {
-                    //case "CONNECT": Method; break;
-                    case "SEND":
-                        handleSend(message);
-                    case "commando3": //Method; break;
-                    case "commando4": //Method; break;
-                    case "commando5": //Method; break;
-                }
-            }
+        switch (token) {
+            //case "CONNECT": Method; break;
+            case "SEND":
+                handleSend(message);
+            case "commando3": //Method; break;
+            case "commando4": //Method; break;
+            case "commando5": //Method; break;
+        }
     }
 
     public void handleSend(String message) {
@@ -65,7 +70,6 @@ public class ClientHandler extends Thread {
         allMessages.add(inputToDispatcher);
 
     }
-
 
 
 }
