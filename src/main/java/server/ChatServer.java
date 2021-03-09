@@ -49,6 +49,7 @@ public class ChatServer {
             counter++;
             System.out.println("Waiting for client");
             Socket client = serverSocket.accept();
+            System.out.println("New client connected");
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
