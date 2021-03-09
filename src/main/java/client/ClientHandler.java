@@ -2,11 +2,9 @@ package client;
 
 import server.Dispatcher;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
+import java.nio.Buffer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentMap;
@@ -31,6 +29,13 @@ public class ClientHandler extends Thread {
         }
     }
 
+    public ClientHandler(String name, BufferedReader br, PrintWriter pw, BlockingQueue<String> allMessages) {
+        this.clientName = name;
+        this.bufferedReader = br;
+        this.printWriter = pw;
+        this.allMessages = allMessages;
+    }
+
     @Override
     public void run() {
         try {
@@ -44,25 +49,26 @@ public class ClientHandler extends Thread {
         String command = bufferedReader.readLine();
         String[] commandArray = command.split("#");
         String token = commandArray[0];
-        String message = clientName + "," + commandArray[1] + "#" + commandArray[2];
+        String message = token + "#" + commandArray[1] + "#" + commandArray[2];
 
-        while (true) {
-            switch (token) {
-                //case "CONNECT": Method; break;
-                case "SEND": handleSend(message);
-                case "commando3": //Method; break;
-                case "commando4": //Method; break;
-                case "commando5" : //Method; break;
-            }
+        //while (true) {
+        switch (token) {
+            //case "CONNECT": Method; break;
+            case "SEND":
+                handleSend(message);
+                break;
+            case "commando3": //Method; break;
+            case "commando4": //Method; break;
+            case "commando5": //Method; break;
         }
     }
+    //  }
 
     public void handleSend(String message) {
         String inputToDispatcher = message;
         allMessages.add(inputToDispatcher);
 
     }
-
 
 
 }

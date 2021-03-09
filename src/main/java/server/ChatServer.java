@@ -28,18 +28,13 @@ public class ChatServer {
     public static void main(String[] args) throws UnknownHostException {
         String ip = "localhost";
         int port = 8088;
+
+
+        ChatServer chatServer = new ChatServer();
         try {
-            if (args.length == 2) {
-                ip = args[0];
-                port = Integer.parseInt(args[1]);
-            } else {
-                throw new IllegalArgumentException("Server not provided with the right arguments");
-            }
-            ChatServer chatServer = new ChatServer();
             chatServer.runServer(port);
-        } catch (NumberFormatException | IOException ne) {
-            System.out.println("Illegal inputs provided when starting the server!");
-            return;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
