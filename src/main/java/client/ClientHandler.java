@@ -58,7 +58,6 @@ public class ClientHandler extends Thread {
             switch (token) {
                 //case "CONNECT": Method; break;
                 case "SEND":
-                    //TODO:  SEND#Peter,Hans#Hello hans
                     String message = token + "#" + clientName + "," + clientInputArray[1] + "#" + clientInputArray[2];
                     handleSend(message);
                     break;
@@ -74,7 +73,7 @@ public class ClientHandler extends Thread {
     }
 
     public void handleSend(String message) {
-        //TODO: SEND#Peter,Hans#Hello hans
+        //SEND#clientName,receiver#MessageToReceiver
         String inputToDispatcher = message;
         allMessages.add(inputToDispatcher);
     }

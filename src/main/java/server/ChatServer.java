@@ -45,10 +45,9 @@ public class ChatServer {
             counter++;
             System.out.println("Waiting for client");
             Socket client = serverSocket.accept();
-            System.out.println("New client connected");
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            // TODO: CONNECT#Clientname
+            //CONNECT#Clientname
             String username = bufferedReader.readLine();
             String[] usernameArray = username.split("#");
             activeClients.put(usernameArray[1], client);

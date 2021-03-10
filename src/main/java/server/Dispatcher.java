@@ -34,34 +34,51 @@ public class Dispatcher extends Thread {
     }
 
     public void sendMessage(String message) throws IOException {
-        //TODO: MESSAGE#Peter#Hello Hans
-        if (message.contains("SEND")) {
-            String[] messageArray = message.split("#");
-            String users = messageArray[1];
-            String userMessage = messageArray[2];
+        Set<String> nameSet = activeClients.keySet();
+        StringBuilder sb = new StringBuilder();
 
-            String[] userArray = users.split(",");
-            String sender = userArray[0];
-            String receiver = userArray[1];
-            String messageToSend = "MESSAGE#" + sender + "#" + userMessage;
-            for (int i = 1; i < userArray.length; i++) {
-                findPrintWriter(userArray[i]).println(messageToSend);
-            }
-        } else if (message.contains("CLOSE")){
-            String[] messageArray = message.split("#");
-            String clientName = messageArray[1];
-            findPrintWriter(clientName).println(message);
-        } else if (message.contains("ONLINE")){
-            Set<String> nameSet = activeClients.keySet();
-            StringBuilder sb = new StringBuilder();
-            sb.append("ONLINE#");
-            for (String name : nameSet) {
-                sb.append(name + ",");
-            }
-            for (String name : nameSet) {
-                findPrintWriter(name).println(sb.toString());
-            }
+        // command#clientName,receiver#message
+        String[] messageArray = message.split("#");
 
+        //The command
+        String token = messageArray[0];
+
+        switch (token) {
+            case "SEND":
+                //clientName,receivers
+                String users = messageArray[1];
+                String[] userArray = users.split(",");
+                //clientname
+                String sender = userArray[0];
+                //The message
+                String userMessage = messageArray[2];
+                sb.append("MESSAGE#" + sender + "#" + userMessage);
+                if (users.contains("*")) {
+                    for (String name : nameSet) {
+                        findPrintWriter(name).println(sb.toString());
+                    }
+                } else {
+                    for (int i = 1; i < userArray.length; i++) {
+                        findPrintWriter(userArray[i]).println(sb.toString());
+                    }
+                }
+                break;
+
+            case "ONLINE":
+                sb.append("ONLINE#");
+                for (String name : nameSet) {
+                    sb.append(name + ",");
+                }
+                for (String name : nameSet) {
+                    findPrintWriter(name).println(sb.toString());
+                }
+                break;
+
+            case "CLOSE":
+                String clientName = messageArray[1];
+                sb.append(token + "#" + messageArray[2]);
+                findPrintWriter(clientName).println(sb.toString());
+                break;
         }
     }
 
@@ -69,5 +86,4 @@ public class Dispatcher extends Thread {
         PrintWriter pw = new PrintWriter(activeClients.get(clientName).getOutputStream(), true);
         return pw;
     }
-
 }
