@@ -41,6 +41,7 @@ public class ClientHandler extends Thread {
     @Override
     public void run() {
         try {
+            printWriter.println("");
             protocol();
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,19 +49,27 @@ public class ClientHandler extends Thread {
     }
 
     public void protocol() throws IOException {
-        //  TODO:  SEND#Hans#Hello hans
-        String command = bufferedReader.readLine();
-        String[] commandArray = command.split("#");
-        String token = commandArray[0];
-        //  TODO:  SEND#Peter,Hans#Hello hans
-        String message = token + "#" + clientName + "," + commandArray[1] + "#" + commandArray[2];
-        switch (token) {
-            //case "CONNECT": Method; break;
-            case "SEND":
-                handleSend(message);
-            case "commando3": //Method; break;
-            case "commando4": //Method; break;
-            case "commando5": //Method; break;
+        boolean running = true;
+        while (running) {
+            //TODO:  SEND#Hans#Hello hans
+            String clientInput = bufferedReader.readLine();
+            String[] clientInputArray = clientInput.split("#");
+            String token = clientInputArray[0];
+            switch (token) {
+                //case "CONNECT": Method; break;
+                case "SEND":
+                    //TODO:  SEND#Peter,Hans#Hello hans
+                    String message = token + "#" + clientName + "," + clientInputArray[1] + "#" + clientInputArray[2];
+                    handleSend(message);
+                    break;
+                case "CLOSE":
+                    running = false;
+                    handleClose("0");
+                    break;
+                default:
+                    running = false;
+                    handleClose("1");
+            }
         }
     }
 
@@ -68,8 +77,12 @@ public class ClientHandler extends Thread {
         //TODO: SEND#Peter,Hans#Hello hans
         String inputToDispatcher = message;
         allMessages.add(inputToDispatcher);
-
     }
 
+
+    public void handleClose(String closeMessage) {
+        String inputToDispatcher = "CLOSE#" +  clientName + "#" + closeMessage;
+        allMessages.add(inputToDispatcher);
+    }
 
 }

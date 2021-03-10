@@ -39,26 +39,23 @@ public class ChatServer {
         Dispatcher dispatcher = new Dispatcher(activeClients, allMessages);
         dispatcher.start();
         int counter = 0;
-        int limit = 3;
+        int limit = 4;
         ServerSocket serverSocket = new ServerSocket(port);
         while (counter < limit) {
             counter++;
             System.out.println("Waiting for client");
             Socket client = serverSocket.accept();
+            System.out.println("New client connected");
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
             // TODO: CONNECT#Clientname
-            String name = bufferedReader.readLine();
-            String[] nameArray = name.split("#");
-            activeClients.put(nameArray[1], client);
+            String username = bufferedReader.readLine();
+            String[] usernameArray = username.split("#");
+            activeClients.put(usernameArray[1], client);
 
-            ClientHandler clientHandler = new ClientHandler(client, nameArray[1], allMessages);
+            ClientHandler clientHandler = new ClientHandler(client, usernameArray[1], allMessages);
             clientHandler.start();
-
-
+            allMessages.add("ONLINE#");
         }
     }
-
-
 }
