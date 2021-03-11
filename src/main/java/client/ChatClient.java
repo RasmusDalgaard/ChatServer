@@ -54,8 +54,6 @@ class Reader extends Thread {
 }
 
 public class ChatClient {
-
-
     Socket client;
     Writer writer;
     Reader reader;
@@ -79,6 +77,8 @@ public class ChatClient {
         reader.start();
     }
     public static void main(String[] args) throws IOException {
-        new ChatClient().connect("localhost", 8088);
+        String host = args[0];
+        int port = (Integer.parseInt(args[1]));
+        new ChatClient().connect(host, port);
     }
 }
