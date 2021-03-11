@@ -22,6 +22,8 @@ import java.util.concurrent.ConcurrentMap;
 public class ChatServer {
 
     BlockingQueue<String> allMessages = new ArrayBlockingQueue<>(200);
+
+    BlockingQueue<String> clientsToclose = new ArrayBlockingQueue<>(200);
     ConcurrentMap<String, Socket> activeClients = new ConcurrentHashMap<>();
 
     //Call server with arguments like this: 0.0.0.0 8088 logfile.log
@@ -36,8 +38,12 @@ public class ChatServer {
     }
 
     public void runServer(int port) throws IOException {
-        Dispatcher dispatcher = new Dispatcher(activeClients, allMessages);
+        Dispatcher dispatcher = new Dispatcher(activeClients, allMessages, clientsToclose);
         dispatcher.start();
+
+        CleanUp cleanUp = new CleanUp(clientsToclose, activeClients);
+        cleanUp.start();
+
         int counter = 0;
         int limit = 4;
         ServerSocket serverSocket = new ServerSocket(port);

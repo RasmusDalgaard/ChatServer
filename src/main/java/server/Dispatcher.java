@@ -14,11 +14,17 @@ public class Dispatcher extends Thread {
 
     ConcurrentMap<String, Socket> activeClients;
     BlockingQueue<String> allMessages;
-
+    BlockingQueue<String> clientsToClose;
 
     public Dispatcher(ConcurrentMap<String, Socket> activeClients, BlockingQueue<String> allMessages) {
         this.activeClients = activeClients;
         this.allMessages = allMessages;
+    }
+
+    public Dispatcher(ConcurrentMap<String, Socket> activeClients, BlockingQueue<String> allMessages, BlockingQueue<String> clientsToClose) {
+        this.activeClients = activeClients;
+        this.allMessages = allMessages;
+        this.clientsToClose = clientsToClose;
     }
 
     @Override
@@ -78,6 +84,7 @@ public class Dispatcher extends Thread {
                 String clientName = messageArray[1];
                 sb.append(token + "#" + messageArray[2]);
                 findPrintWriter(clientName).println(sb.toString());
+                clientsToClose.add(clientName);
                 break;
         }
     }

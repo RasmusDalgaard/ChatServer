@@ -53,7 +53,12 @@ public class ClientHandler extends Thread {
         while (running) {
             //TODO:  SEND#Hans#Hello hans
             String clientInput = bufferedReader.readLine();
+            if (clientInput == null) {
+                clientInput = "CLOSE#";
+            }
+
             String[] clientInputArray = clientInput.split("#");
+            //NO input exception
             String token = clientInputArray[0];
             switch (token) {
                 //case "CONNECT": Method; break;
