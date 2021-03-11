@@ -1,5 +1,7 @@
 package server;
 
+import exceptions.NoSuchClientException;
+
 import javax.print.attribute.standard.PrinterStateReasons;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,13 +35,13 @@ public class Dispatcher extends Thread {
             try {
                 String message = allMessages.take();
                 sendMessage(message);
-            } catch (InterruptedException | IOException e) {
+            } catch (InterruptedException | NoSuchClientException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void sendMessage(String message) throws IOException {
+    public void sendMessage(String message) throws NoSuchClientException {
         Set<String> nameSet = activeClients.keySet();
         StringBuilder sb = new StringBuilder();
 
@@ -89,8 +91,15 @@ public class Dispatcher extends Thread {
         }
     }
 
-    public PrintWriter findPrintWriter(String clientName) throws IOException {
-        PrintWriter pw = new PrintWriter(activeClients.get(clientName).getOutputStream(), true);
+    public PrintWriter findPrintWriter(String clientName) throws NoSuchClientException {
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(activeClients.get(clientName).getOutputStream(), true);
+        } catch (IOException e) {
+            throw new NoSuchClientException("There is no client named: " + clientName);
+        } catch (NullPointerException e) {
+            throw new NoSuchClientException("There is no client named: " + clientName);
+        }
         return pw;
     }
 }

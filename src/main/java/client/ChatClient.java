@@ -77,8 +77,14 @@ public class ChatClient {
         reader.start();
     }
     public static void main(String[] args) throws IOException {
-        String host = args[0];
-        int port = (Integer.parseInt(args[1]));
+        String host = "";
+        int port = 8088;
+        if (args.length == 2) {
+            host = args[0];
+            port = (Integer.parseInt(args[1]));
+        } else {
+            host = "localhost";
+        }
         new ChatClient().connect(host, port);
     }
 }
